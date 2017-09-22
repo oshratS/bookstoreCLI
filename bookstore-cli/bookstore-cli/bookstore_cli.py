@@ -26,8 +26,9 @@ class BookstoreCLI(cmd.Cmd):
                 password=args[1],
             )                  
                      
-            self.users_ref.child(args[0]).set({               
-                'created': str(datetime.datetime.now()),                             
+            self.users_ref.child(args[0]).set({          
+                'uid': args[0],     
+                'created': str(datetime.datetime.now()),                                             
             })
 
             print('Sucessfully created new user: {0}'.format(user.uid))
@@ -38,23 +39,55 @@ class BookstoreCLI(cmd.Cmd):
         return
 
     def do_deleteUser (self, args):
-        args = args.split()
+        "deletes one user by it's id, i.e: deleteUser username"
 
-        auth.delete_user(args[0])
-        print('Successfully deleted user')
+        args = args.split()
+        
+        try:
+            auth.delete_user(args[0])
+                    
+            self.users_ref.child(args[0]).delete()            
+            print('Sucessfully deleted user: {0}'.format(args[0]))
+            
+        except Exception as e:
+            print('an error has occured: %s' % e)            
+                        
         return
 
-    def do_printUserList (context):
-        # only name
+    def do_printUserList (self, args):
+        "prints our users names, i.e: printUserList"        
+
+        data = self.users_ref.order_by_key().get()
+        for key, val in data.items():
+            print(key)
+        
         return
 
     def do_getUser (self, args):
+        "checks if a user exist, i.e: getUser username"
+
         args = args.split()
-        #user = auth.get_user(uid)
-        #print 'Successfully fetched user data: {0}'.format(user.uid)
+      
+        try:  
+            user = auth.get_user(args[0])        
+      
+            print('User {0} exist in the db'.format(user.uid))
+        except Exception:
+            print('User {0} does not exist in the db'.format(args[0]))    
+
         return
 
-    def do_deleteAllUsers (context):
+    def do_deleteAllUsers (self, args):
+        "deletes all users from the system, i.e: deleteAllUsers"
+
+        try:
+            data = self.users_ref.order_by_key().get()
+            for key, val in data.items():
+                self.do_deleteUser(key) 
+
+            print('All users were deleted successfully')
+        except Exception as e:
+            print('an error has occured: %s' % e)  
 
         return
  
@@ -64,16 +97,25 @@ class BookstoreCLI(cmd.Cmd):
         email = args[1]
         phone = args[2]
 
-        user = auth.update_user(
-            uid=username,
-            email=email,
-            phone_number=phone)
-    
-        print('Sucessfully updated user: {0}'.format(user.uid))
-        retrun
+        try:
+            user = auth.update_user(
+                uid=username,
+                email=email,
+                phone_number=phone)
 
-    def do_EXIT(self, line):
-        "enter EXIT in order to close this interface"
+            self.users_ref.child(args[0]).update({
+                'email': email,
+                'phone_number': phone
+            })
+    
+            print('Sucessfully updated user: {0}'.format(user.uid))
+        except Exception as e:            
+            print('an error has occured: %s' % e)  
+
+        return
+
+    def do_exit(self, line):
+        "enter 'exit' in order to close this interface"
         return True
 
 if __name__ == '__main__':    
