@@ -32,9 +32,10 @@ class BookstoreCLI(cmd.Cmd):
             })
 
             print('Sucessfully created new user: {0}'.format(user.uid))
-            
+            return user
         except Exception as e:
-            print('an error has occured: %s' % e)            
+            print('User {0} already exist in the db'.format(args[0]))    
+            return 'user already exist'
         
         return
 
@@ -49,7 +50,7 @@ class BookstoreCLI(cmd.Cmd):
             self.users_ref.child(args[0]).delete()            
             print('Sucessfully deleted user: {0}'.format(args[0]))
             
-        except Exception as e:
+        except Exception:
             print('an error has occured: %s' % e)            
                         
         return
@@ -67,16 +68,16 @@ class BookstoreCLI(cmd.Cmd):
         "checks if a user exist, i.e: getUser username"
 
         args = args.split()
-      
+       
         try:  
             user = auth.get_user(args[0])        
       
             print('User {0} exist in the db'.format(user.uid))
+            return user
         except Exception:
             print('User {0} does not exist in the db'.format(args[0]))    
-
-        return
-
+            return 'not found'
+        
     def do_deleteAllUsers (self, args):
         "deletes all users from the system, i.e: deleteAllUsers"
 

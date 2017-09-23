@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>f9b4a2b6-8604-4402-ba3b-471777b6be07</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>bookstore_cli.py</StartupFile>
+    <StartupFile>BookstoreCLI.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,7 +22,11 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="bookstore_cli.py" />
+    <Compile Include="BookstoreCLI.py" />
+    <Compile Include="TestBookstoreCli.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="tests\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
