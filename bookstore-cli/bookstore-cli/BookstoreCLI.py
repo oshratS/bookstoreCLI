@@ -14,6 +14,9 @@ class BookstoreCLI(cmd.Cmd):
     ref = db.reference('/')
     users_ref = ref.child('users')
     
+    #The method creats new users.
+    #each user account assembled by email address and password.
+    #If the account is sucessfully created or not ,the CLI will represent a suitable message.
     def do_createUser (self, args):        
         "creates a new user, i.e: createUser username password"        
 
@@ -39,6 +42,8 @@ class BookstoreCLI(cmd.Cmd):
         
         return
 
+    #The method deletes chosen users.
+    ##If the account is sucessfully deleted or not ,the CLI will represent a suitable message.
     def do_deleteUser (self, args):
         "deletes one user by it's id, i.e: deleteUser username"
 
@@ -55,6 +60,7 @@ class BookstoreCLI(cmd.Cmd):
                         
         return
 
+    #The method prints the users list(by their names).
     def do_printUserList (self, args):
         "prints our users names, i.e: printUserList"        
 
@@ -64,6 +70,8 @@ class BookstoreCLI(cmd.Cmd):
         
         return
 
+    #The method checks if a user exists(by looking for it`s user name)
+    #and printing according to it's finding the right message.
     def do_getUser (self, args):
         "checks if a user exist, i.e: getUser username"
 
@@ -77,7 +85,8 @@ class BookstoreCLI(cmd.Cmd):
         except Exception:
             print('User {0} does not exist in the db'.format(args[0]))    
             return 'not found'
-        
+     
+    #The method delets all users and respond if sucessfully doing so(or not).      
     def do_deleteAllUsers (self, args):
         "deletes all users from the system, i.e: deleteAllUsers"
 
@@ -91,7 +100,8 @@ class BookstoreCLI(cmd.Cmd):
             print('an error has occured: %s' % e)  
 
         return
- 
+
+ #The method adds additional user details such as phone number etc.
     def do_inputExtraUserDetails (self, args):
         args = args.split()
         username = args[0]
@@ -115,6 +125,7 @@ class BookstoreCLI(cmd.Cmd):
 
         return
 
+#The method exits the CLI
     def do_exit(self, line):
         "enter 'exit' in order to close this interface"
         return True
